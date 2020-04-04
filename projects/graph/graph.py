@@ -18,6 +18,10 @@ sets & dicts are HT under hood
 
 -for this problem all directed edges
 
+Takeaways:
+-Look up unknown python methods
+-simplify type issues from start if possible 
+
 """
 from util import Stack, Queue  # These may come in handy
 
@@ -86,10 +90,10 @@ class Graph:
                 # when dequeue, (queueing allows u to check if its been vistied in order) (check if in set?)
                 # mark it as visited (if not, add to set) If has been visited, ignore, deque the next vertix in queue
                 # enqueue all its neighbors (add its children BDT children to end of queue)
-                    # (1 away, 2 away, 3 away ) 
-                    # deque the next vert in FIFO order 
+                    # (1 away, 2 away, 3 away )
+                    # deque the next vert in FIFO order
                     # check if been visited
-                    # mark it as visited 
+                    # mark it as visited
                     # enqueu its nieghbors /children (add to end of queue)
 
         q= []
@@ -128,11 +132,11 @@ class Graph:
         do the thing (print, modify, do action)
         DFT traversal on each of children (parent of children wont return
         until traversal completed for children. left children always traversed
-        first. 
+        first.
         -PARENT stack will continue, after `all` its children return
         -DFT calls of parent & its 2nd child wont start until all the children's children children
         of the 1st child is completed/visted (in case where theres 2 childs of a parent) )
-        -if its _been_ visted that node can return 
+        -if its _been_ visted that node can return
 
            # create a stack FILO/ LIFO (like pancake) related to RECURSION
         # PUSH the starting vertix to stack
@@ -142,10 +146,10 @@ class Graph:
                 # Check if its been visited
                 # if it hasn't been visited:
                     # Mark it as visited
-                    # Push all its neighbors onto the stck 
+                    # Push all its neighbors onto the stck
 
         # optimazations are tradeoffs based on the constraints of your system for time/space
-        its all relative based on what kind of system youre operating in 
+        its all relative based on what kind of system youre operating in
 
         """
         # create a stack FILO/ LIFO (like pancake) related to RECURSION
@@ -169,12 +173,13 @@ class Graph:
                     s.push(neighbor)
 
     # add default arg python gotchas docs.python.guide
-    def dft_recursive(self, starting_vertex, visted=None):
+    def dft_recursive(self, starting_vertex, visited=set()):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
+        depth first traverse! not search 
         """
         # check if not node has been visited
         # if not...
@@ -184,24 +189,56 @@ class Graph:
 
         # call dft_recursive on each neighbor
 
+        if starting_vertex not in visited:  # base case/cb function
+            visited.add(starting_vertex)
+
+            for neighbor in self.get_neighbors(starting_vertex):  # repeat
+                self.dft_recursive(neighbor, visited)
+
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list `PATH` containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
+        guranteed to give shortest path
         """
-        # create a queue FIFO
-        # enqueue A PATH to starting vertix
+        # create a queue (FIFO)
+        # enqueue A PATH to starting vertix (Path in form of list)
         # create a set to store visited vertices
+
         # while queue is not empty:
-        # Dequeue the first path
+        # Dequeue the first path (FROM THE FRONT OF THE QUEUE)
         # GRAB THE VERTEX FROM END OF PATH
         # check if its been visted
         # If hasn't been visited:
         # mark it as visisted
-        # enquene A PATH to all its neighbors
-        # MAKE A COPY OF THE PATH
-        # ENQUE THE COPY
+        # -CHECK IF ITS THE TARGET
+        # IF SO RETURN THE PATH
+        # COPY THE PATH, & enquene A PATH to all THAT VERTIX'S (THE ONE JUST MARKED AS VISITED) neighbors
+        # MAKE A COPY OF EVERY VERSION OF THE PATH (WITH EACH NEW NEIGHBOR)
+        # ENQUE (THE COPY(S) OF THAT PATH VERSION)
+
+        mq = Queue()
+        mq.enqueue([starting_vertex])  # ***turn start into array
+        visited = set()
+
+        while mq.size() > 0:
+            path = mq.dequeue()
+            print("dequee", path)
+            vert = path[-1]
+            if vert not in visited:
+                print("mark as visisted v:", vert)
+                visited.add(vert)
+            if vert == destination_vertex:
+                print("target found", vert)
+                return path
+                # append each diff new neighbor to copy of path v
+            for neighbor in self.get_neighbors(vert):
+                #  if you need the original list unchanged when the new list is
+                # modified, you can use copy() method. This is called shallow copy
+                pathCopy = path.copy()
+                pathCopy.append(neighbor)
+                mq.enqueue(pathCopy)
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -209,9 +246,39 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+        # create a stack (FILO)
+        s = Stack()
+        # push A PATH to starting vertix (Path in form of list)
+        s.push([starting_vertex])
+        # create a set to store visited vertices
+        visited = set()
+        # while STACK is not empty:
+        while s.size() > 0:
+            # Pop the vertex from back/end of stack
+            path = s.pop()
+        # GRAB THE VERTEX FROM END OF PATH
+            vertex = path[-1]
+        # check if its been visted
+         # if it hasn't been visited:
+        # Mark it as visited
+            if vertex not in visited:
+                visited.add(vertex)
+
+        # -CHECK IF ITS THE TARGET
+            # IF SO RETURN THE PATH
+            if vertex == destination_vertex:
+                print("target found", vertex)
+                return path
+
+        # MAKE A COPY OF EVERY VERSION OF THE PATH (WITH EACH NEW NEIGHBOR)
+        # push (THE COPY(S) OF THAT PATH VERSION) to stack
+            for neighbor in self.get_neighbors(vertex):
+                pathCopy = path.copy()  # resets copy to path value each time
+                pathCopy.append(neighbor)
+                s.push(pathCopy)
+
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=set()):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -219,7 +286,13 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        # base case:
+        if starting_vertex not in visited:
+            visited.add(starting_vertex)
+            if starting_vertex == destination_vertex:
+                return starting_vertex
+            for neighbor in self.get_neighbors(starting_vertex):
+                self.dfs_recursive(neighbor, destination_vertex, visited)
 
 
 if __name__ == '__main__':
@@ -280,7 +353,7 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    # print(graph.bfs(1, 6))
+    print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
