@@ -20,7 +20,22 @@ sets & dicts are HT under hood
 
 Takeaways:
 -Look up unknown python methods
--simplify type issues from start if possible 
+-simplify type issues from start if possible
+-Use limited time to learn new devices/methods instead of turning wheels
+-many main diff is swtiching Queue (BFT- FIFO) to Stack (DFT- FILO)
+
+Recursive
+-use arguments for recursive function as hints on how to break down
+base cases & set up
+-if needed variables = None (in Base case set up), create the variable
+as infracture Base Case
+    -resolve which part of recursion variables need to be added (go backwards
+    to find where var needed?)
+    -resolve what is ACTUALLY PUT AS ARGUMENTS INTO YOUR RECURSION , AS RECURSION LOOPS
+    -remember to add variables not included in your original arguments as arguments
+    and set to None if needed
+Questions:
+-why return None in recursion ?
 
 """
 from util import Stack, Queue  # These may come in handy
@@ -173,13 +188,13 @@ class Graph:
                     s.push(neighbor)
 
     # add default arg python gotchas docs.python.guide
-    def dft_recursive(self, starting_vertex, visited=set()):
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
-        depth first traverse! not search 
+        depth first traverse! not search
         """
         # check if not node has been visited
         # if not...
@@ -188,7 +203,9 @@ class Graph:
         # implement a helper
 
         # call dft_recursive on each neighbor
-
+        if visited = None:
+            # dont initiate set in arg, will keep reference of value from previous invokations, it if invoke function twice. It wont be empty in other words.
+            visited = set()
         if starting_vertex not in visited:  # base case/cb function
             visited.add(starting_vertex)
 
@@ -236,7 +253,7 @@ class Graph:
             for neighbor in self.get_neighbors(vert):
                 #  if you need the original list unchanged when the new list is
                 # modified, you can use copy() method. This is called shallow copy
-                pathCopy = path.copy()
+                pathCopy = path.copy()  # arrays pass by reference, so will change
                 pathCopy.append(neighbor)
                 mq.enqueue(pathCopy)
 
@@ -278,21 +295,55 @@ class Graph:
                 pathCopy.append(neighbor)
                 s.push(pathCopy)
 
-    def dfs_recursive(self, starting_vertex, destination_vertex, visited=set()):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
+    def dfs_recursive(self, starting_vertex, target_value, visited=None, path=None):
 
-        This should be done using recursion.
+        # Return a list containing a path from
+        # starting_vertex to destination_vertex in
+        # depth-first order.
+
+        # This should be done using recursion.
+        if visited is None:
+            visited = set()
+        if path is None:
+            path = []
+        visited.add(starting_vertex)
+        path = path + [starting_vertex]
+        if starting_vertex == target_value:
+            return path
+        for child_vert in self.vertices[starting_vertex]:
+            if child_vert not in visited:
+                new_path = self.dfs_recursive(
+                    child_vert, target_value, visited, path)
+                if new_path:
+                    return new_path
+        return None
+
+        if visited is None:
+            visited = set()
+        if starting_vertex not in visited:
+            vis
+
         """
         # base case:
+        if visited is None:
+            visited = set()
+        if path is None:
+            path = []
+
         if starting_vertex not in visited:
             visited.add(starting_vertex)
+            pCopy = path.copy()
+            pCopy.append(starting_vertex)  # this appending needs to occur
             if starting_vertex == destination_vertex:
-                return starting_vertex
+
+                return pCopy
+
             for neighbor in self.get_neighbors(starting_vertex):
-                self.dfs_recursive(neighbor, destination_vertex, visited)
+                n_path = self.dfs_recursive(
+                    neighbor, destination_vertex, visited, pCopy)
+                if n_path is not None:
+                    return n_path
+        return None """
 
 
 if __name__ == '__main__':
