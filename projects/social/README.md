@@ -50,6 +50,23 @@ Note that in this sample, Users 3, 4 and 9 are not in User 1's extended social n
 
 2. If you create 1000 users with an average of 5 random friends each, what percentage of other users will be in a particular user's extended social network? What is the average degree of separation between a user and those in his/her extended network?
 
+# sg = SocialGraph()
+# percentage of other users in a particular user's extended social network?
+sg.populate_graph(1000,5)
+connections = sg.get_all_social_paths(1)
+print(len(connections)/1000) <- amount of connections/ 1000 number of users 
+
+#GO THROUGH THE LEN OF EACH PATH, DIVIDE BY AVERAGE
+
+total = 0
+for path in connections.values():
+    total +=len(path)
+print(f"Avg connection length={total/len(c)-1}") #b/c -1 its the connection between people 
+
+
+# degree of seperation between a user & those in his /her extended network
+
+
 
 
 ## 4. Stretch Goal

@@ -34,6 +34,14 @@ test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7),
 ^ once parent no longer has parent, return that vertex, thats the farthest ancestor
 
 ^ Extra:count the number of times its in ancester[i][1] == number of ancestors
+ -other hints, can flip way its traversing towards ancestor
+ and compare longest length 
+
+ -we dont always need to bild vert/ edges.. no, b/c
+ depends on type of DS underhood thats storing our
+ argument 
+
+ -focus on sprint challenge, vs sprint wording 
  """
 
 

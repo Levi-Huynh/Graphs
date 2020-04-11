@@ -22,7 +22,7 @@ class Queue():
         return len(self.queue)
 
     def __str__(self):
-        return f"{self.queue}"
+        return str(self.queue)
 
 
 class Stack():
@@ -40,3 +40,6 @@ class Stack():
 
     def size(self):
         return len(self.stack)
+
+    def __str__(self):
+        return str(self.stack)
